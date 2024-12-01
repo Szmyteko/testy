@@ -27,4 +27,12 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Views\Maintenance\" />
+      <Folder Include="Views\Property\" />
+      <Folder Include="Views\RentalAgreement\" />
+      <Folder Include="Views\Tenant\" />
+      <Folder Include="Views\UserManagement\" />
+    </ItemGroup>
+
 </Project>
