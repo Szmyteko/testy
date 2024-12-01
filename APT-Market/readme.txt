@@ -1,7 +1,7 @@
 ## Kolejność prac
     1. Utworzenie modeli -> zrobione (należy jednak później dodać relacje)
-    2. Zaimplementowanie ról dla użytkowników - admin/najemca/wynajmujący
-    3. Przygotowanie domyślnego stanu bazy danych, który będzie zawierał domyślne konto administratora
+    2. Zaimplementowanie ról dla użytkowników - admin/najemca/wynajmujący -> gotowe (Admin domyślny tworzy się przy uruchomieniu aplikacji, jeśli wcześniej nie istniał drugi o domyślnych danych logowania)
+    3. Przygotowanie domyślnego stanu bazy danych, który będzie zawierał domyślne konto administratora -> zawieszone, bo udało się przy starcie programu go tworzyć.
     4. Podstawowe przygotowanie kontrolerów oraz widoków, aby nawigacja na stronie była w pełni gotowa i miała już warunkowe wyświetlanie np. opcji w nawigacji Layoutu. (CRUD można nawigować później w trakcie rozwijania kontrolerów)
     5. Rozwijanie kolejnych kontrolerów:
         - Tenant
