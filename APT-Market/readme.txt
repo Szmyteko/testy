@@ -24,8 +24,7 @@ Wynajmujący ma dostęp do swoich ogłoszeń oraz do podglądu oraz edycji danyc
 
 ## Wyjściowy stan aplikacji (pierwsze uruchomienie)
 Zaciągnięcie początkowego stanu bazy danych (bez lokali, z jednym domyślnym adminem) poprzez:
-    1. 
-    
+    1. DO UZUPEŁNIENIA W PRZYSZŁOŚCI.
     
 ## Docker
 Trzeba dodać komendy dla skonfigurowania dockera dla aplikacji, aby w każdym środowisku mogła zostać otwarta. Dockerfile czy po prostu komenda do pobrania i uruchomienia kontenera z Windows Server.
@@ -33,15 +32,12 @@ POBRANIE MSSQL DLA ARM64: docker pull --platform linux/arm64 mcr.microsoft.com/m
 POBRANIE MSSQL DLA AMD64: docker pull --platform linux/amd64 mcr.microsoft.com/mssql/server:latest
 Następnie uruchomienie utworzonego kontenera.
 
-## Inicjalizacja aplikacji
-Zestaw podstawowych komend do uruchomienia w menedżerze NuGet, dla poprawnego uruchomienia aplikacji i migracji
-
 ## Ustawienia appsettings.json
 DefaultConnection dla naszej potrzeby budowania aplikacji, a następnie uruchomienia jej gdzieś indziej. Ze względu na to, że korzystamy z komputerów Mac musieliśmy odrobinkę wydłużyć DefaultConnection poprzez dodanie do niej kilku parametrów:
     "DefaultConnection": "Server=localhost,1433;Database=BeFit;User Id=SA;Password=Pa$$w0rd123;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False;TrustServerCertificate=True;Integrated Security=False;"
 
 ## NuGet
-Do poprawnego działania aplikacji trzeba zainstalować:
+Do poprawnego działania aplikacji trzeba w menedżerze pakietów NuGet zainstalować:
     - Microsoft.VisualStudio.Web.CodeGeneration.Design
     - Microsoft.AspNetCore.Identity.EntityFrameworkCore
     - Microsoft.EntityFrameworkCore.SqlServer
@@ -50,5 +46,3 @@ Do poprawnego działania aplikacji trzeba zainstalować:
     - Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore
 
 ## Notatki
-Dodać do okna rejestracji możliwość wyboru roli i pole dla numeru telefonu.
-W panelu administracyjnym wyświetlanie dodatkowo emaila i telefonu.
