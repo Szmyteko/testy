@@ -22,4 +22,17 @@ Wynajmujący ma dostęp do swoich ogłoszeń oraz do podglądu oraz edycji danyc
 Zaciągnięcie początkowego stanu bazy danych (bez lokali, z jednym domyślnym adminem) poprzez:
     1. 
     
+    
+## Docker
+Trzeba dodać komendy dla skonfigurowania dockera dla aplikacji, aby w każdym środowisku mogła zostać otwarta. Dockerfile czy po prostu komenda do pobrania i uruchomienia kontenera z Windows Server.
+
+## Inicjalizacja aplikacji
+Zestaw podstawowych komend do uruchomienia w menedżerze NuGet, dla poprawnego uruchomienia aplikacji i migracji
+
+## Ustawienia appsettings.json
+DefaultConnection dla naszej potrzeby budowania aplikacji, a następnie uruchomienia jej gdzieś indziej. Ze względu na to, że korzystamy z komputerów Mac musieliśmy odrobinkę wydłużyć DefaultConnection poprzez dodanie do niej kilku parametrów:
+    "DefaultConnection": "Server=localhost,1433;Database=BeFit;User Id=SA;Password=Pa$$w0rd123;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False;TrustServerCertificate=True;Integrated Security=False;"
+
+
 ## Notatki
+Trzeba będzie później wypisać jeszcze jakie pakiety mamy w NuGet, żeby aplikacja poprawnie działała.

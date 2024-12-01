@@ -17,7 +17,11 @@ public class AdminPanelController : Controller
         _roleManager = roleManager;
     }
 
-
+    // public async Task<IActionResult> Index()
+    // {
+    //     var user = await _userManager.GetUserAsync(User);
+    //     return View();
+    // }
     public async Task<IActionResult> AddRole(string userId, string roleName)
     {
         var user = await _userManager.FindByIdAsync(userId);
@@ -29,7 +33,7 @@ public class AdminPanelController : Controller
         return BadRequest("Nie udało się przypisać roli.");
     }
     
-    public async Task<IActionResult> UsersWithRoles()
+    public async Task<IActionResult> Index()
     {
         var users = _userManager.Users.ToList();
         var usersWithRoles = new List<UsersViewModel>();
