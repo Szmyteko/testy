@@ -2,14 +2,13 @@
     ViewBag.Title = "Panel administratora";
     Layout = "_Layout";
 }
-
-<h2>Panel administratora</h2>
+<!-- PANEL DO ZARZĄDZANIA UŻYYKOWNIKAMI I ROLAMI PRZEZ ADMINA-->
+<h2>Zarządzanie użytkownikami</h2>
 <table>
     <thead>
     <tr>
         <th>Email</th>
         <th>Role</th>
-        <th>Password</th>
     </tr>
     </thead>
     <tbody>
@@ -18,7 +17,6 @@
         <tr>
             <td>@user.Email</td>
             <td>@string.Join(", ", user.Roles)</td>
-            <td>@User.</td>
         </tr>
     }
     </tbody>

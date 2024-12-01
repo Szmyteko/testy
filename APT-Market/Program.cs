@@ -61,13 +61,13 @@ using (var scope = app.Services.CreateScope())
         }
 
         // Tworzenie domyślnego konta administratora
-        var adminEmail = "admin@admin.pl";
-        var adminPassword = "Admin123!";
+        var adminEmail = "admin@admin.com";
+        var adminPassword = "Pa$$w0rd";
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
         if (adminUser == null)
         {
-            var newAdmin = new IdentityUser { UserName = adminEmail, Email = adminEmail };
+            var newAdmin = new IdentityUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
             var result = await userManager.CreateAsync(newAdmin, adminPassword);
             if (result.Succeeded)
             {

@@ -9,7 +9,7 @@
         - RentalAgreement
         - Property
         - MaintenanceRequest
-    6. Dodanie panelu administratora, który będzie mógł z jednego widoku zarządzać uprawnieniami użytkowników w aplikacji (tym sposobem będzie mógł dodać kolejnego administratora przez zmianę roli zwykłego użytkownika)
+    6. Dodanie panelu administratora (dodano), który będzie mógł z jednego widoku zarządzać uprawnieniami użytkowników w aplikacji (tym sposobem będzie mógł dodać kolejnego administratora przez zmianę roli zwykłego użytkownika)
     7. Obsługa błędów, dodanie widoków, które będą zawierały informacje np. o błędnym ID użytkownika. (Zabezpieczenie przez nieautoryzowanymi zmianami przez innych użytkowników)
     
     
@@ -25,6 +25,9 @@ Zaciągnięcie początkowego stanu bazy danych (bez lokali, z jednym domyślnym 
     
 ## Docker
 Trzeba dodać komendy dla skonfigurowania dockera dla aplikacji, aby w każdym środowisku mogła zostać otwarta. Dockerfile czy po prostu komenda do pobrania i uruchomienia kontenera z Windows Server.
+POBRANIE MSSQL DLA ARM64: docker pull --platform linux/arm64 mcr.microsoft.com/mssql/server:latest
+POBRANIE MSSQL DLA AMD64: docker pull --platform linux/amd64 mcr.microsoft.com/mssql/server:latest
+Następnie uruchomienie utworzonego kontenera.
 
 ## Inicjalizacja aplikacji
 Zestaw podstawowych komend do uruchomienia w menedżerze NuGet, dla poprawnego uruchomienia aplikacji i migracji

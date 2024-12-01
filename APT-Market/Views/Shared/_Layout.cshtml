@@ -24,9 +24,17 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Strona główna</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PropertyList">Ogłoszenia</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Property" asp-action="Index">Ogłoszenia</a>
                     </li>
-                    @* @if (User.IsInRole("Admin")) *@
+                    @* @if (User.IsInRole("Najemca")) *@
+                    {
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Tenant" asp-action="Index">Moje najmy</a>
+                    }
+                    @* @if (User.IsInRole("Wynajmujący")) *@
+                    {
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Property" asp-action="MyListings">Moje lokale</a>
+                    }
+                    @if (User.IsInRole("Admin"))
                     {
                     <li><a class="nav-link text-dark" asp-area="" asp-controller="AdminPanel" asp-action="Index">Panel administracyjny</a></li>
                     }
