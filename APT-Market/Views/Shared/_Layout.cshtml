@@ -29,6 +29,7 @@
                     @if (User.IsInRole("Najemca") || User.IsInRole("Wynajmujący"))
                     {
                         <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="Index">Płatności</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Maintenance" asp-action="Index">Zgłoszenia serwisowe</a>
                     }
                     @if (User.IsInRole("Najemca"))
                     {
