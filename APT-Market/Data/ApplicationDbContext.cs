@@ -14,4 +14,5 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<APT_Market.Models.Payment> Payment { get; set; } = default!;
     public DbSet<APT_Market.Models.RentalAgreement> RentalAgreement { get; set; } = default!;
     public DbSet<APT_Market.Models.MaintenanceRequest> MaintenanceRequest { get; set; } = default!;
+    public DbSet<APT_Market.Models.UsersViewModel> UsersViewModel { get; set; } = default!;
 }

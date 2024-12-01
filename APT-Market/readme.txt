@@ -2,7 +2,11 @@
     1. Utworzenie modeli -> zrobione (należy jednak później dodać relacje)
     2. Zaimplementowanie ról dla użytkowników - admin/najemca/wynajmujący -> gotowe (Admin domyślny tworzy się przy uruchomieniu aplikacji, jeśli wcześniej nie istniał drugi o domyślnych danych logowania)
     3. Przygotowanie domyślnego stanu bazy danych, który będzie zawierał domyślne konto administratora -> zawieszone, bo udało się przy starcie programu go tworzyć.
-    4. Podstawowe przygotowanie kontrolerów oraz widoków, aby nawigacja na stronie była w pełni gotowa i miała już warunkowe wyświetlanie np. opcji w nawigacji Layoutu. (CRUD można nawigować później w trakcie rozwijania kontrolerów)
+    4. Podstawowe przygotowanie kontrolerów oraz widoków, aby nawigacja na stronie była w pełni gotowa i miała już warunkowe wyświetlanie np. opcji w nawigacji Layoutu. (CRUD można nawigować później w trakcie rozwijania kontrolerów) -> częściowo wprowadzone, korpus pod rozbudowę gotowy
+    4!. Skompletowanie logowania i rejestracji użytkowników. Rozbudowa pliku Register.cshtml tak, aby można było wybrać rolę najemca/wynajmujący oraz dodać pole z numerem telefonu.
+    4!!. Dodanie CRUD dla wynajmującego, aby mógł dodawać ogłoszenia na lokale
+    4!!!. Zbudowanie widoku umożliwiającego przeglądanie ofert + wynajem (z rolą najemcy)
+    4!!!!. Zbudowanie widoku dla Tenant/Index.cshtml, aby można było zajrzeć w szczegóły najmu lokalu oraz przeglądać swoje wynajmy
     5. Rozwijanie kolejnych kontrolerów:
         - Tenant
         - Payment
@@ -36,6 +40,15 @@ Zestaw podstawowych komend do uruchomienia w menedżerze NuGet, dla poprawnego u
 DefaultConnection dla naszej potrzeby budowania aplikacji, a następnie uruchomienia jej gdzieś indziej. Ze względu na to, że korzystamy z komputerów Mac musieliśmy odrobinkę wydłużyć DefaultConnection poprzez dodanie do niej kilku parametrów:
     "DefaultConnection": "Server=localhost,1433;Database=BeFit;User Id=SA;Password=Pa$$w0rd123;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False;TrustServerCertificate=True;Integrated Security=False;"
 
+## NuGet
+Do poprawnego działania aplikacji trzeba zainstalować:
+    - Microsoft.VisualStudio.Web.CodeGeneration.Design
+    - Microsoft.AspNetCore.Identity.EntityFrameworkCore
+    - Microsoft.EntityFrameworkCore.SqlServer
+    - Microsoft.AspNetCore.Identity.UI
+    - Microsoft.EntityFrameworkCore.Tools
+    - Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore
 
 ## Notatki
-Trzeba będzie później wypisać jeszcze jakie pakiety mamy w NuGet, żeby aplikacja poprawnie działała.
+Dodać do okna rejestracji możliwość wyboru roli i pole dla numeru telefonu.
+W panelu administracyjnym wyświetlanie dodatkowo emaila i telefonu.

@@ -45,7 +45,8 @@ public class AdminPanelController : Controller
             {
                 UserId = user.Id,
                 Email = user.Email,
-                Roles = roles
+                Roles = roles,
+                PhoneNumber = user.PhoneNumber,
             });
         }
 
