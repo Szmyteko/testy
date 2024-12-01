@@ -26,6 +26,10 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Property" asp-action="Index">Ogłoszenia</a>
                     </li>
+                    @if (User.IsInRole("Najemca") || User.IsInRole("Wynajmujący"))
+                    {
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="Index">Płatności</a>
+                    }
                     @if (User.IsInRole("Najemca"))
                     {
                         <a class="nav-link text-dark" asp-area="" asp-controller="Tenant" asp-action="Index">Moje najmy</a>
