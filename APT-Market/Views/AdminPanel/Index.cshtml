@@ -1,0 +1,23 @@
+@{
+    ViewBag.Title = "Panel administratora";
+    Layout = "_Layout";
+}
+
+<h2>Panel administratora</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Role</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.Email</td>
+            <td>@string.Join(", ", user.Roles)</td>
+        </tr>
+    }
+    </tbody>
+</table>
