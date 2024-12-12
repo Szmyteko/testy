@@ -64,10 +64,9 @@ public class AdminPanelController : Controller
             Text = r.Name
         }).ToList();
 
-        // Przekaż role jako część ViewBag
         ViewBag.Roles = roles;
 
-        // Zwróć pusty model widoku do widoku Razor
+        // Zwróć pusty model widoku do widoku
         return View(new UsersViewModel());
     }
 
@@ -104,10 +103,100 @@ public class AdminPanelController : Controller
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
+
+            if (!ModelState.IsValid)
+            {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine($"Błąd walidacji: {error.ErrorMessage}");
+                }
+            }
         }
 
         // W przypadku błędu ponownie pobierz role
         ViewBag.Roles = new SelectList(_roleManager.Roles.Select(r => r.Name).ToList());
         return View(model);
     }
+    
+    // Akcja GET: Details
+    public async Task<IActionResult> Details(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            return BadRequest("ID użytkownika jest wymagane.");
+        }
+
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound("Użytkownik nie został znaleziony.");
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var viewModel = new UsersViewModel
+        {
+            UserId = user.Id,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            Roles = roles.ToList(),
+            UserName = user.UserName
+        };
+
+        return View(viewModel);
+    }
+    // Akcja POST: Details
+    
+    // Akcja GET: Delete
+    public async Task<IActionResult> Delete(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            return BadRequest("ID użytkownika jest wymagane.");
+        }
+
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound("Użytkownik nie został znaleziony.");
+        }
+
+        var viewModel = new UsersViewModel
+        {
+            UserId = user.Id,
+            UserName = user.UserName,
+        };
+
+        return View(viewModel);
+    }
+    // Akcja POST: Delete
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            return BadRequest("ID użytkownika jest wymagane.");
+        }
+
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound("Użytkownik nie został znaleziony.");
+        }
+
+        var result = await _userManager.DeleteAsync(user);
+        if (result.Succeeded)
+        {
+            return RedirectToAction("Index"); // Powrót do listy użytkowników jeśli udana akcja
+        }
+
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+
+        return View("Delete", new UsersViewModel { UserId = id, UserName = user.UserName });
+    }
+
 }

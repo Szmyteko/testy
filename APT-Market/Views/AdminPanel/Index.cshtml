@@ -5,7 +5,7 @@
 <!-- PANEL DO ZARZĄDZANIA UŻYYKOWNIKAMI I ROLAMI PRZEZ ADMINA-->
 <h2>Zarządzanie użytkownikami</h2>
 <p>
-    <a asp-action="Create">Utwórz użytkownika</a>
+    <a asp-action="Create" class="btn btn-outline-primary">Utwórz użytkownika</a>
 </p>
 <table>
     <thead>
@@ -22,7 +22,10 @@
             <td>@user.Email</td>
             <td>@string.Join(", ", user.Roles)</td>
             <td>@user.PhoneNumber</td>
+            <td><p><a asp-action="Details" asp-route-id="@user.UserId" class="btn btn-success">Szczegóły</a> | <a asp-action="Delete" asp-route-id="@user.UserId" class="btn btn-danger"> Usuń</a></p></td>
         </tr>
     }
     </tbody>
 </table>
+
+

@@ -1,0 +1,12 @@
+@model APT_Market.Models.UsersViewModel
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Czy na pewno chcesz usunąć użytkownika @Model.UserName?</h2>
+<form asp-action="Delete" method="post">
+    <input type="hidden" name="id" value="@Model.UserId" />
+    <button type="submit" class="btn btn-danger">Usuń</button>
+    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+</form>
