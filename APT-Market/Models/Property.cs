@@ -14,6 +14,8 @@ public class Property : IValidatableObject
     public int RentPrice { get; set; }
     [Required(ErrorMessage = "Należy podać metraż lokalu.")]
     public int Size { get; set; }
+    public bool IsAvailable { get; set; } = true;
+    public List<MaintenanceRequest> ServiceRequests { get; set; } = new List<MaintenanceRequest>();
     public string? UserId { get; set; }
     public IdentityUser? User { get; set; }
 

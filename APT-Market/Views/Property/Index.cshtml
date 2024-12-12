@@ -1,3 +1,4 @@
+@model IEnumerable<Property>
 @{
     ViewBag.Title = "Lista nieruchomości";
     Layout = "_Layout";
@@ -5,3 +6,32 @@
 <!-- STRONA Z OGŁOSZENIAMI WSZYSTKIMI WYLISTOWANYMI -->
 
 <h2>Lista nieruchomości</h2>
+<br/>
+
+@if (User.IsInRole("Wynajmujący") || User.IsInRole("Admin"))
+{
+    <a asp-action="Create" class="btn btn-outline-primary">Utwórz ogłoszenie</a>
+}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Adres</th>
+        <th>Cena najmu</th>
+        <th>Metraż</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var property in Model)
+    {
+        <tr>
+            <td>@property.Address</td>
+            <td>@property.RentPrice</td>
+            <td>@property.Size</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@property.Id" class="btn btn-primary">Szczegóły</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

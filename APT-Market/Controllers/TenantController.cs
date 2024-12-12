@@ -8,4 +8,6 @@ public class TenantController : Controller
     {
         return View();
     }
+    
+    
 }

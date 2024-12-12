@@ -1,0 +1,42 @@
+@model APT_Market.Models.Property
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h1>Informacje o lokalu</h1>
+<p>Adres: @Model.Address</p>
+<p>Cena najmu: @Model.RentPrice zł</p>
+<p>Metraż: @Model.Size m²</p>
+
+@if (ViewBag.IsOwner)
+{
+    <h2>Zgłoszenia serwisowe</h2>
+    <ul>
+        @foreach (var request in Model.ServiceRequests)
+        {
+            <li>
+                @request.Description - Status: @request.Status
+                <form asp-action="UpdateRequestStatus" method="post">
+                    <input type="hidden" name="requestId" value="@request.Id" />
+                    <select name="status">
+                        <option value="Nowe">Nowe</option>
+                        <option value="W trakcie">W trakcie</option>
+                        <option value="Wykonane">Wykonane</option>
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-secondary">Aktualizuj</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <form asp-action="CreateServiceRequest" method="post">
+        <input type="hidden" name="propertyId" value="@Model.Id" />
+        <textarea name="description" class="form-control" placeholder="Opis zgłoszenia"></textarea>
+        <button type="submit" class="btn btn-primary">Wyślij zgłoszenie</button>
+    </form>
+}
+

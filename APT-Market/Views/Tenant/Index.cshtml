@@ -1,7 +1,37 @@
+@model IEnumerable<APT_Market.Models.RentalAgreement>
 @{
     ViewBag.Title = "Moje wynajmy";
     Layout = "_Layout";
 }
+
 <!-- STRONA DLA NAJEMCY, KTÓRA POKAZUJE WSZYSTKIE WYNAJĘTE PRZEZ NAJEMCE LOKALE ORAZ DANE DOT. LOKALI -->
 
-<h2>Moje wynajmowane lokalne</h2>
+<h1>Moje wynajęte lokale</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Adres</th>
+        <th>Cena najmu</th>
+        <th>Metraż</th>
+        <th>Data rozpoczęcia</th>
+        <th>Data zakończenia</th>
+        <th>Akcje</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var agreement in Model)
+    {
+        <tr>
+            <td>@agreement.Property.Address</td>
+            <td>@agreement.MonthlyRent zł</td>
+            <td>@agreement.Property.Size m²</td>
+            <td>@agreement.StartDate</td>
+            <td>@(agreement.EndDate.HasValue ? agreement.EndDate.Value : "Brak")</td>
+            <td>
+                <a asp-controller="Property" asp-action="Details" asp-route-id="@agreement.Property.Id" class="btn btn-primary">Szczegóły</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
