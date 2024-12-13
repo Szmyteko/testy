@@ -1,53 +1,39 @@
-@model APT_Market.Models.UsersViewModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Microsoft.AspNetCore.Identity.IdentityUser
 
 @{
-    ViewBag.Title = "Nowy użytkownik";
-    Layout = "_Layout";
-
-    // Rzutowanie ViewBag["Roles"] na odpowiedni typ
-    var roles = ViewBag.Roles as IEnumerable<SelectListItem>;
+    ViewBag.Title = "Utwórz użytkownika";
 }
 
 <h2>Utwórz użytkownika</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label">Nazwa użytkownika</label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label" >Adres email</label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label" >Numer telefonu</label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label">Hasło</label>
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SelectedRole" class="control-label">Rola użytkownika</label>
-                <select asp-for="SelectedRole" class="form-control" asp-items="roles">
-                    <option value="">Wybierz rolę...</option>
-                </select>
-                <span asp-validation-for="SelectedRole" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Dodaj" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Powrót</a>
-</div>
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="UserName">Nazwa użytkownika</label>
+        <input type="text" name="userName" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="email" name="email" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="PhoneNumber">Numer telefonu</label>
+        <input type="text" name="phoneNumber" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="Password">Hasło</label>
+        <input type="password" name="password" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="SelectedRole">Rola</label>
+        <select name="selectedRole" class="form-control">
+            <option value="">Wybierz rolę</option>
+            @foreach (var role in ViewBag.Roles as IEnumerable<SelectListItem>)
+            {
+                <option value="@role.Value">@role.Text</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Utwórz</button>
+    <a asp-action="Index" class="btn btn-info">Powrót</a>
+</form>

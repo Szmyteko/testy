@@ -1,11 +1,10 @@
 using System.Security.Claims;
 using APT_Market.Data;
-using APT_Market.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using SQLitePCL;
+using Microsoft.EntityFrameworkCore;
 
 namespace APT_Market.Controllers;
 
@@ -16,6 +15,7 @@ public class AdminPanelController : Controller
     private readonly RoleManager<IdentityRole> _roleManager;
 
     private readonly ApplicationDbContext _context;
+
     public AdminPanelController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
     {
         _userManager = userManager;
@@ -37,27 +37,17 @@ public class AdminPanelController : Controller
     public async Task<IActionResult> Index()
     {
         var users = _userManager.Users.ToList();
-        var usersWithRoles = new List<UsersViewModel>();
-
-        foreach (var user in users)
+        var usersWithRoles = users.Select(async user => new
         {
-            var roles = await _userManager.GetRolesAsync(user);
-            usersWithRoles.Add(new UsersViewModel
-            {
-                UserId = user.Id,
-                Email = user.Email,
-                Roles = roles,
-                PhoneNumber = user.PhoneNumber,
-            });
-        }
+            User = user,
+            Roles = await _userManager.GetRolesAsync(user)
+        }).Select(task => task.Result);
 
         return View(usersWithRoles);
     }
 
-// Akcja GET: Create
     public IActionResult Create()
     {
-        // Pobierz role z bazy danych
         var roles = _roleManager.Roles.Select(r => new SelectListItem
         {
             Value = r.Name,
@@ -65,89 +55,43 @@ public class AdminPanelController : Controller
         }).ToList();
 
         ViewBag.Roles = roles;
-
-        // Zwróć pusty model widoku do widoku
-        return View(new UsersViewModel());
+        return View();
     }
 
-
-    // Akcja POST: Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(UsersViewModel model)
+    public async Task<IActionResult> Create(string userName, string email, string phoneNumber, string password, string selectedRole)
     {
         if (ModelState.IsValid)
         {
             var user = new IdentityUser
             {
-                UserName = model.UserName,
-                Email = model.Email,
-                PhoneNumber = model.PhoneNumber
+                UserName = userName,
+                Email = email,
+                PhoneNumber = phoneNumber
             };
 
-            // Utworzenie użytkownika z hasłem
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, password);
             if (result.Succeeded)
             {
-                // Przypisanie użytkownika do wybranej roli
-                if (!string.IsNullOrEmpty(model.SelectedRole))
+                if (!string.IsNullOrEmpty(selectedRole))
                 {
-                    await _userManager.AddToRoleAsync(user, model.SelectedRole);
+                    await _userManager.AddToRoleAsync(user, selectedRole);
                 }
 
-                return RedirectToAction("Index"); // Powrót do listy użytkowników
+                return RedirectToAction("Index");
             }
 
-            // Obsługa błędów
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
-
-            if (!ModelState.IsValid)
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine($"Błąd walidacji: {error.ErrorMessage}");
-                }
-            }
         }
 
-        // W przypadku błędu ponownie pobierz role
         ViewBag.Roles = new SelectList(_roleManager.Roles.Select(r => r.Name).ToList());
-        return View(model);
+        return View();
     }
-    
-    // Akcja GET: Details
-    public async Task<IActionResult> Details(string id)
-    {
-        if (string.IsNullOrEmpty(id))
-        {
-            return BadRequest("ID użytkownika jest wymagane.");
-        }
 
-        var user = await _userManager.FindByIdAsync(id);
-        if (user == null)
-        {
-            return NotFound("Użytkownik nie został znaleziony.");
-        }
-
-        var roles = await _userManager.GetRolesAsync(user);
-
-        var viewModel = new UsersViewModel
-        {
-            UserId = user.Id,
-            Email = user.Email,
-            PhoneNumber = user.PhoneNumber,
-            Roles = roles.ToList(),
-            UserName = user.UserName
-        };
-
-        return View(viewModel);
-    }
-    // Akcja POST: Details
-    
-    // Akcja GET: Delete
     public async Task<IActionResult> Delete(string id)
     {
         if (string.IsNullOrEmpty(id))
@@ -161,18 +105,34 @@ public class AdminPanelController : Controller
             return NotFound("Użytkownik nie został znaleziony.");
         }
 
-        var viewModel = new UsersViewModel
-        {
-            UserId = user.Id,
-            UserName = user.UserName,
-        };
-
-        return View(viewModel);
+        return View(user);
     }
-    // Akcja POST: Delete
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound("Użytkownik nie został znaleziony.");
+        }
+
+        var result = await _userManager.DeleteAsync(user);
+        if (result.Succeeded)
+        {
+            return RedirectToAction("Index");
+        }
+
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+
+        return View("Delete", user);
+    }
+    
+    public async Task<IActionResult> Edit(string id)
     {
         if (string.IsNullOrEmpty(id))
         {
@@ -185,18 +145,128 @@ public class AdminPanelController : Controller
             return NotFound("Użytkownik nie został znaleziony.");
         }
 
-        var result = await _userManager.DeleteAsync(user);
-        if (result.Succeeded)
-        {
-            return RedirectToAction("Index"); // Powrót do listy użytkowników jeśli udana akcja
-        }
+        // Pobranie bieżących danych
+        var properties = _context.Property.Where(p => p.UserId == id).ToList();
+        var rentalAgreements = _context.RentalAgreement
+            .Include(ra => ra.Property)
+            .Include(ra => ra.Tenant)
+            .Where(ra => ra.UserId == id)
+            .ToList();
+        var payments = _context.Payment.Where(p => p.UserId == id).ToList();
 
-        foreach (var error in result.Errors)
+        // Pobranie roli
+        var roles = _roleManager.Roles.Select(r => new SelectListItem
         {
-            ModelState.AddModelError(string.Empty, error.Description);
-        }
+            Value = r.Name,
+            Text = r.Name
+        }).ToList();
 
-        return View("Delete", new UsersViewModel { UserId = id, UserName = user.UserName });
+        var currentRoles = await _userManager.GetRolesAsync(user);
+
+        ViewBag.Properties = properties;
+        ViewBag.RentalAgreements = rentalAgreements;
+        ViewBag.Payments = payments;
+        ViewBag.Roles = roles;
+        ViewBag.CurrentRole = currentRoles.FirstOrDefault();
+
+        return View(user);
     }
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Edit(string id, string userName, string email, string phoneNumber, string selectedRole)
+{
+    if (string.IsNullOrEmpty(id))
+    {
+        return BadRequest("ID użytkownika jest wymagane.");
+    }
+
+    var user = await _userManager.FindByIdAsync(id);
+    if (user == null)
+    {
+        return NotFound("Użytkownik nie został znaleziony.");
+    }
+
+    var currentRoles = await _userManager.GetRolesAsync(user); // Pobranie ról użytkownika
+    var currentRole = currentRoles.FirstOrDefault(); // Zakładamy, że użytkownik ma tylko jedną rolę
+
+    if (ModelState.IsValid)
+    {
+        // Aktualizacja podstawowych danych użytkownika
+        user.UserName = userName;
+        user.Email = email;
+        user.PhoneNumber = phoneNumber;
+
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+        {
+            foreach (var error in updateResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+        }
+        
+
+        // Walidacja zmiany roli
+        if (!string.IsNullOrEmpty(selectedRole) && selectedRole != currentRole)
+        {
+            // Ograniczenie zmiany ról między "Tenant" i "Owner"
+            if ((currentRole == "Wynajmujący" && selectedRole == "Najemca") || 
+                (currentRole == "Najemca" && selectedRole == "Wynajmujący"))
+            {
+                ModelState.AddModelError(string.Empty, "Nie można zmienić roli z najemcy na wynajmującego ani odwrotnie.");
+            }
+            else
+            {
+                // Usunięcie obecnych ról i dodanie nowej
+                var removeRolesResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                if (removeRolesResult.Succeeded)
+                {
+                    var roleResult = await _userManager.AddToRoleAsync(user, selectedRole);
+                    if (!roleResult.Succeeded)
+                    {
+                        foreach (var error in roleResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var error in removeRolesResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+        }
+
+        // Jeśli brak błędów, przekieruj do listy użytkowników
+        if (ModelState.IsValid)
+        {
+            return RedirectToAction("Index");
+        }
+    }
+
+    
+    // Jeśli walidacja się nie powiedzie, przekazujemy ponownie dane
+    ViewBag.Properties = _context.Property.Where(p => p.UserId == id).ToList();
+    ViewBag.RentalAgreements = _context.RentalAgreement
+        .Include(ra => ra.Property)
+        .Include(ra => ra.Tenant)
+        .Where(ra => ra.UserId == id)
+        .ToList();
+    ViewBag.Payments = _context.Payment.Where(p => p.UserId == id).ToList();
+    ViewBag.Roles = _roleManager.Roles.Select(r => new SelectListItem
+    {
+        Value = r.Name,
+        Text = r.Name
+    }).ToList();
+    ViewBag.CurrentRole = currentRole;
+
+    return View(user);
+}
+
+
 
 }
