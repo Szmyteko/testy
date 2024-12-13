@@ -9,7 +9,7 @@ public class Property : IValidatableObject
 {
     public int Id { get; set; }
     [Required(ErrorMessage = "Musisz podać adres lokalu.")]
-    public int Address { get; set; }
+    public int Address { get; set; } // na stringa
     [Required(ErrorMessage = "Należy podać cenę najmu.")]
     public int RentPrice { get; set; }
     [Required(ErrorMessage = "Należy podać metraż lokalu.")]

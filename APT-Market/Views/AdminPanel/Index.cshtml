@@ -1,31 +1,35 @@
+@model IEnumerable<dynamic>
+
 @{
-    ViewBag.Title = "Panel administratora";
-    Layout = "_Layout";
+    ViewBag.Title = "Lista użytkowników";
 }
-<!-- PANEL DO ZARZĄDZANIA UŻYYKOWNIKAMI I ROLAMI PRZEZ ADMINA-->
-<h2>Zarządzanie użytkownikami</h2>
-<p>
-    <a asp-action="Create" class="btn btn-outline-primary">Utwórz użytkownika</a>
-</p>
-<table>
+
+<h2>Lista użytkowników</h2>
+
+<table class="table">
     <thead>
     <tr>
+        <th>Nazwa użytkownika</th>
         <th>Email</th>
-        <th>Role</th>
         <th>Numer telefonu</th>
+        <th>Role</th>
+        <th>Akcje</th>
     </tr>
     </thead>
     <tbody>
     @foreach (var user in Model)
     {
         <tr>
-            <td>@user.Email</td>
+            <td>@user.User.UserName</td>
+            <td>@user.User.Email</td>
+            <td>@user.User.PhoneNumber</td>
             <td>@string.Join(", ", user.Roles)</td>
-            <td>@user.PhoneNumber</td>
-            <td><p><a asp-action="Details" asp-route-id="@user.UserId" class="btn btn-success">Szczegóły</a> | <a asp-action="Delete" asp-route-id="@user.UserId" class="btn btn-danger"> Usuń</a></p></td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@user.User.Id" class="btn btn-success">Edytuj</a>
+                <a asp-action="Delete" asp-route-id="@user.User.Id" class="btn btn-danger">Usuń</a>
+            </td>
         </tr>
     }
     </tbody>
 </table>
-
-
+<a asp-action="Create" class="btn btn-primary">Utwórz użytkownika</a>
