@@ -5,6 +5,18 @@
     Layout = "_Layout";
 }
 
+<h2>Kontakt z właścicielem</h2>
+@if (Model.User != null)
+{
+    <p>Nazwa użytkownika : @Model.User.UserName</p>
+    <p>Email: @Model.User.Email</p>
+    <p>Numer telefonu: @Model.User.PhoneNumber</p>
+}
+else
+{
+    <p>Dane właściciela są niedostępne.</p>
+}
+
 <h1>Informacje o lokalu</h1>
 <p>Adres: @Model.Address</p>
 <p>Cena najmu: @Model.RentPrice zł</p>

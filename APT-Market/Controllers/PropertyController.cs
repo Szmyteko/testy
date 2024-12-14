@@ -32,10 +32,14 @@ public class PropertyController : Controller
     public async Task<IActionResult> Details(int id)
     {
         var property = await _context.Property
-            .Include(p => p.ServiceRequests)
+            .Include(p => p.User) // Załaduj dane użytkownika
+            .Include(p => p.ServiceRequests) // Jeśli potrzebujesz danych serwisowych
             .FirstOrDefaultAsync(p => p.Id == id);
 
-        if (property == null) return NotFound();
+        if (property == null)
+        {
+            return NotFound();
+        }
 
         var currentUserId = _userManager.GetUserId(User);
         ViewBag.IsOwner = property.UserId == currentUserId;
