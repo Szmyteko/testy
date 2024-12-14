@@ -27,16 +27,16 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Property" asp-action="Index">Ogłoszenia</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="Index">Płatności</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Maintenance" asp-action="Index">Zgłoszenia serwisowe</a>
                     </li>
-                    @if (User.IsInRole("Najemca"))
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="Index">Płatności</a>
+                    </li>
+                    @if (User.IsInRole("Najemca") || User.IsInRole("Admin"))
                     {
                         <a class="nav-link text-dark" asp-area="" asp-controller="Tenant" asp-action="Index">Moje najmy</a>
                     }
-                    @if (User.IsInRole("Wynajmujący") || User.IsInRole("Admin"))
+                    @if (User.IsInRole("Wynajmujący")|| User.IsInRole("Admin"))
                     {
                     <a class="nav-link text-dark" asp-area="" asp-controller="Property" asp-action="MyListings">Moje lokale</a>
                     }

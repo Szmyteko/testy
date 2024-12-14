@@ -1,9 +1,10 @@
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace APT_Market.Models;
 
-public class RentalAgreement : IValidatableObject
+public class RentalAgreement : IEnumerable
 {
     public int Id { get; set; }
     [Required(ErrorMessage = "Id lokalu jest wymagane.")]
@@ -35,5 +36,10 @@ public class RentalAgreement : IValidatableObject
         {
             yield return new ValidationResult("Czynsz musi być większy od zera.", new[] { "Wysokość czynszu." });
         }
+    }
+
+    public IEnumerator GetEnumerator()
+    {
+        throw new NotImplementedException();
     }
 }

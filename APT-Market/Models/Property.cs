@@ -9,13 +9,15 @@ public class Property : IValidatableObject
 {
     public int Id { get; set; }
     [Required(ErrorMessage = "Musisz podać adres lokalu.")]
-    public int Address { get; set; } // na stringa
+    public string? Address { get; set; }
     [Required(ErrorMessage = "Należy podać cenę najmu.")]
     public int RentPrice { get; set; }
     [Required(ErrorMessage = "Należy podać metraż lokalu.")]
     public int Size { get; set; }
+    public RentalAgreement? RentalAgreement { get; set; }
+    public string? Description { get; set; }
     public bool IsAvailable { get; set; } = true;
-    public List<MaintenanceRequest> ServiceRequests { get; set; } = new List<MaintenanceRequest>();
+    public List<MaintenanceRequest>? ServiceRequests { get; set; } = new List<MaintenanceRequest>();
     public string? UserId { get; set; }
     public IdentityUser? User { get; set; }
 

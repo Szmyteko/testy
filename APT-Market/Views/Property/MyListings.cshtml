@@ -29,6 +29,7 @@
             <td>@(property.IsAvailable ? "Dostępny" : "Wynajęty")</td>
             <td>
                 <a asp-action="Details" asp-route-id="@property.Id" class="btn btn-primary">Szczegóły</a>
+                <a asp-action="Edit" asp-route-id="@property.Id" class="btn btn-primary">Zarządzaj</a>
             </td>
         </tr>
     }

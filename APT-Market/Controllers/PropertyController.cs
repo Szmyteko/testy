@@ -153,4 +153,84 @@ public class PropertyController : Controller
 
         return View(model);
     }
+    
+    [HttpGet]
+    [Authorize(Roles = "Admin,Wynajmujący")]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var property = await _context.Property.FirstOrDefaultAsync(p => p.Id == id);
+
+        if (property == null)
+        {
+            return NotFound();
+        }
+
+        var dto = new PropertyUpdateDto
+        {
+            Id = property.Id,
+            Description = property.Description,
+            RentPrice = property.RentPrice
+        };
+
+        return View(dto);
+    }
+    
+    [HttpPost]
+    [Authorize(Roles = "Admin,Wynajmujący")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(PropertyUpdateDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(dto);
+        }
+
+        var property = await _context.Property.FirstOrDefaultAsync(p => p.Id == dto.Id);
+
+        if (property == null)
+        {
+            return NotFound();
+        }
+
+        // Mapowanie danych z DTO
+        property.Description = dto.Description;
+        property.RentPrice = dto.RentPrice;
+
+        _context.Update(property);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("MyListings");
+    }
+
+
+    [HttpPost]
+    [Authorize(Roles = "Admin,Wynajmujący")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RemoveTenant(int id)
+    {
+        var property = await _context.Property
+            .Include(p => p.ServiceRequests)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (property == null || property.IsAvailable) return NotFound();
+
+        // Znajdź umowę najmu i usuń
+        var rentalAgreement = await _context.RentalAgreement
+            .FirstOrDefaultAsync(ra => ra.PropertyId == id);
+        if (rentalAgreement != null)
+        {
+            _context.RentalAgreement.Remove(rentalAgreement);
+        }
+
+        // Usuń zgłoszenia serwisowe
+        _context.MaintenanceRequest.RemoveRange(property.ServiceRequests);
+
+        // Oznacz lokal jako dostępny
+        property.IsAvailable = true;
+        property.UserId = null;
+
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Edit", new { id = property.Id });
+    }
+
 }
