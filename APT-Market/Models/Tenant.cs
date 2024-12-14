@@ -6,7 +6,7 @@ namespace APT_Market.Models;
 
 public class Tenant
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
     [Required(ErrorMessage = "Imię i nazwisko są wymagane.")]
     public string FullName { get; set; }
     [Required(ErrorMessage = "Numer telefonu jest wymagany.")]
