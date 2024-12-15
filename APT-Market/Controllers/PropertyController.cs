@@ -91,7 +91,7 @@ public class PropertyController : Controller
         var rentalAgreement = new RentalAgreement
         {
             PropertyId = property.Id,
-            TenantId = int.Parse(_userManager.GetUserId(User)),
+            TenantId = _userManager.GetUserId(User),
             StartDate = DateOnly.FromDateTime(DateTime.Now),
             MonthlyRent = property.RentPrice
         };

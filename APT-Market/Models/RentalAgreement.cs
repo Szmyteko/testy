@@ -11,7 +11,7 @@ public class RentalAgreement : IValidatableObject
     public int PropertyId { get; set; }
     public Property Property { get; set; }
     [Required(ErrorMessage = "Id wynajmującego jest wymagane.")]
-    public int TenantId { get; set; }
+    public string TenantId { get; set; }
     public Tenant Tenant { get; set; }
     [Display(Name = "Początek najmu")]
     [Required(ErrorMessage = "Data początku najmu jest wymagana.")]

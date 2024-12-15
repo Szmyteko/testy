@@ -30,6 +30,7 @@
             <td>@property.Size</td>
             <td>
                 <a asp-action="Details" asp-route-id="@property.Id" class="btn btn-primary">Szczegóły</a>
+                <a asp-action="Rent" asp-controller="RentalAgreement" asp-route-id="@property.Id" class="btn btn-primary">Wynajmij</a>
             </td>
         </tr>
     }
