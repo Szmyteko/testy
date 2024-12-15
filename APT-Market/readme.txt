@@ -34,7 +34,7 @@ Następnie uruchomienie utworzonego kontenera.
 
 ## Ustawienia appsettings.json
 DefaultConnection dla naszej potrzeby budowania aplikacji, a następnie uruchomienia jej gdzieś indziej. Ze względu na to, że korzystamy z komputerów Mac musieliśmy odrobinkę wydłużyć DefaultConnection poprzez dodanie do niej kilku parametrów:
-    "DefaultConnection": "Server=localhost,1433;Database=BeFit;User Id=SA;Password=Pa$$w0rd123;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False;TrustServerCertificate=True;Integrated Security=False;"
+    "DefaultConnection": "Server=localhost,1433;Database=APTMarket;User Id=SA;Password=Pa$$w0rd123;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False;TrustServerCertificate=True;Integrated Security=False;"
 
 ## NuGet
 Do poprawnego działania aplikacji trzeba w menedżerze pakietów NuGet zainstalować:

@@ -26,42 +26,61 @@ public class RentalAgreementController : Controller
         var property = await _context.Property.FindAsync(id);
         if (property == null || !property.IsAvailable)
         {
-            return BadRequest("Lokal niedostępny.");
+            return BadRequest("Lokal jest niedostępny.");
+        }
+
+        var model = new RentalAgreement
+        {
+            PropertyId = property.Id,
+            Property = property
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Rent(RentalAgreement rentalAgreement)
+    {
+        var property = await _context.Property.FindAsync(rentalAgreement.PropertyId);
+        if (property == null || !property.IsAvailable)
+        {
+            return BadRequest("Lokal jest niedostępny.");
         }
 
         var userId = _userManager.GetUserId(User);
 
-        // Sprawdź, czy Tenant istnieje
-        var tenant = await _context.Tenant.FirstOrDefaultAsync(t => t.Id.ToString() == userId);
+        // Sprawdź, czy najemca istnieje
+        var tenant = await _context.Tenant.FirstOrDefaultAsync(t => t.UserId == userId);
         if (tenant == null)
         {
             tenant = new Tenant
             {
+                Id = Guid.NewGuid().ToString(),
                 UserId = userId,
                 FullName = User.Identity.Name ?? "Nieznany użytkownik",
-                PhoneNumber = "", // Możesz pobrać numer z IdentityUser, jeśli dostępny
-                Email = _userManager.GetUserName(User) // Zakładam, że UserName to email
+                Email = (await _userManager.GetUserAsync(User))?.Email,
+                PhoneNumber = "" // Możesz dodać logikę do pozyskiwania numeru
             };
 
             _context.Tenant.Add(tenant);
             await _context.SaveChangesAsync();
         }
 
-        // Tworzenie umowy najmu
-        var rentalAgreement = new RentalAgreement
-        {
-            PropertyId = property.Id,
-            TenantId = tenant.UserId, // Korzystamy z Tenant.Id
-            StartDate = DateOnly.FromDateTime(DateTime.Now),
-            MonthlyRent = property.RentPrice
-        };
+        // Tworzenie nowej umowy najmu
+        rentalAgreement.TenantId = tenant.Id;
+        rentalAgreement.StartDate = DateOnly.FromDateTime(DateTime.UtcNow);
+        rentalAgreement.MonthlyRent = property.RentPrice;
 
         property.IsAvailable = false; // Ustawienie lokalu jako zajętego
+
         _context.RentalAgreement.Add(rentalAgreement);
         await _context.SaveChangesAsync();
 
         return RedirectToAction("Index");
     }
+
+    
 
 
 }
