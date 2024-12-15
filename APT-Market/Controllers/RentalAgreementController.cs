@@ -56,11 +56,10 @@ public class RentalAgreementController : Controller
         {
             tenant = new Tenant
             {
-                Id = Guid.NewGuid().ToString(),
                 UserId = userId,
                 FullName = User.Identity.Name ?? "Nieznany użytkownik",
                 Email = (await _userManager.GetUserAsync(User))?.Email,
-                PhoneNumber = "" // Możesz dodać logikę do pozyskiwania numeru
+                PhoneNumber = "" // Dodaj logikę do wypełnienia numeru
             };
 
             _context.Tenant.Add(tenant);
@@ -68,17 +67,24 @@ public class RentalAgreementController : Controller
         }
 
         // Tworzenie nowej umowy najmu
-        rentalAgreement.TenantId = tenant.Id;
-        rentalAgreement.StartDate = DateOnly.FromDateTime(DateTime.UtcNow);
-        rentalAgreement.MonthlyRent = property.RentPrice;
+        var newRentalAgreement = new RentalAgreement
+        {
+            PropertyId = rentalAgreement.PropertyId,
+            TenantId = tenant.Id,
+            StartDate = rentalAgreement.StartDate != default ? rentalAgreement.StartDate : DateOnly.FromDateTime(DateTime.UtcNow),
+            EndDate = rentalAgreement.EndDate,
+            MonthlyRent = property.RentPrice
+        };
 
-        property.IsAvailable = false; // Ustawienie lokalu jako zajętego
-
-        _context.RentalAgreement.Add(rentalAgreement);
+        property.IsAvailable = false; // Ustaw lokal jako zajęty
+        _context.RentalAgreement.Add(newRentalAgreement);
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Index");
+        return RedirectToAction("MyListings", "Property");
     }
+
+
+
 
     
 

@@ -1,10 +1,9 @@
 @model IEnumerable<APT_Market.Models.Property>
+
 @{
     ViewBag.Title = "Moje lokale";
     Layout = "_Layout";
 }
-
-<!-- STRONA DLA WYNAJMUJĄCYCH Z ICH LOKALAMI WYSTAWIONYMI LUB WYNAJĘTYMI -->
 
 <h1>Moje ogłoszenia</h1>
 <a asp-action="Create" class="btn btn-success">Dodaj nowe ogłoszenie</a>
@@ -16,6 +15,7 @@
         <th>Cena najmu</th>
         <th>Metraż</th>
         <th>Status</th>
+        <th>Najemca</th>
         <th>Akcje</th>
     </tr>
     </thead>

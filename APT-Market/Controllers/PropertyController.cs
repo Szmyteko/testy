@@ -59,12 +59,17 @@ public class PropertyController : Controller
     public async Task<IActionResult> MyListings()
     {
         var userId = _userManager.GetUserId(User);
+
         var properties = await _context.Property
+            .Include(p => p.RentalAgreement)
+            .ThenInclude(ra => ra.Tenant)
             .Where(p => p.UserId == userId)
             .ToListAsync();
 
         return View(properties);
     }
+
+
 
     // Akcja GET: Widok wynajętych przez najemce lokali
     [Authorize(Roles = "Najemca")]
