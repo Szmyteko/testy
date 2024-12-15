@@ -32,7 +32,7 @@ public class RentalAgreementController : Controller
         var userId = _userManager.GetUserId(User);
 
         // Sprawdź, czy Tenant istnieje
-        var tenant = await _context.Tenant.FirstOrDefaultAsync(t => t.Id == userId);
+        var tenant = await _context.Tenant.FirstOrDefaultAsync(t => t.Id.ToString() == userId);
         if (tenant == null)
         {
             tenant = new Tenant
