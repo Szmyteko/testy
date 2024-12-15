@@ -15,6 +15,9 @@ public class Property : IValidatableObject
     [Required(ErrorMessage = "Należy podać metraż lokalu.")]
     public int Size { get; set; }
     public RentalAgreement? RentalAgreement { get; set; }
+    public List<Payment> Payments { get; set; }
+
+    public Payment Payment { get; set; }
     public string? Description { get; set; }
     public bool IsAvailable { get; set; } = true;
     public List<MaintenanceRequest>? ServiceRequests { get; set; } = new List<MaintenanceRequest>();

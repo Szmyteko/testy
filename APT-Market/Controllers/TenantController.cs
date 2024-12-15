@@ -22,11 +22,14 @@ public class TenantController : Controller
     {
         var userId = _userManager.GetUserId(User);
 
+        // Pobierz wszystkie wynajmy dla użytkownika
         var rentalAgreements = await _context.RentalAgreement
-            .Where(ra => ra.UserId == userId)
             .Include(ra => ra.Property)
+            .Where(ra => ra.Tenant.UserId == userId)
             .ToListAsync();
 
-        return View(rentalAgreements);
+        return View(rentalAgreements); // Przekazujemy listę RentalAgreement
     }
+
+
 }

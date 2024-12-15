@@ -1,3 +1,4 @@
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
@@ -9,6 +10,9 @@ public class Payment : IValidatableObject
     [Required(ErrorMessage = "Proszę wprowadzić ID umowy najmu")]
     public int RentalAgreementId { get; set; }
     public RentalAgreement RentalAgreement { get; set; }
+    public int PropertyId { get; set; }
+    public Property Property { get; set; }
+    public Tenant Tenant { get; set; }
     [Required(ErrorMessage = "Należy wprowadzić kwotę płatności.")]
     public int Amount { get; set; }
     [Required(ErrorMessage = "Musisz wprowadzić datę płatności.")]

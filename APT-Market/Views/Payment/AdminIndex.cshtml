@@ -1,27 +1,25 @@
-@model dynamic
+@model IEnumerable<APT_Market.Models.Payment>
 
-<h2>Aktywne wynajmy</h2>
 <table class="table">
     <thead>
     <tr>
-        <th>Adres</th>
+        <th>Data</th>
+        <th>Kwota</th>
         <th>Najemca</th>
-        <th>Kwota czynszu</th>
-        <th>Status płatności</th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var rental in ViewBag.ActiveRentals)
+    @foreach (var payment in Model)
     {
         <tr>
-            <td>@rental.Property.Address</td>
-            <td>@rental.Tenant.FullName</td>
-            <td>@rental.MonthlyRent zł</td>
-            <td>@(rental.EndDate.HasValue ? "Aktywny" : "Zakończony")</td>
+            <td>@payment.Date.ToString("yyyy-MM-dd")</td> <!-- Bez HasValue -->
+            <td>@payment.Amount zł</td>
+            <td>@payment.Tenant.FullName</td>
         </tr>
     }
     </tbody>
 </table>
+
 
 <h2>Historia płatności</h2>
 <table class="table">

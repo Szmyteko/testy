@@ -178,7 +178,8 @@ public class PropertyController : Controller
         {
             Id = property.Id,
             Description = property.Description,
-            RentPrice = property.RentPrice
+            RentPrice = property.RentPrice,
+            RentalAgreement = property.RentalAgreement
         };
 
         return View(dto);
@@ -211,35 +212,27 @@ public class PropertyController : Controller
         return RedirectToAction("MyListings");
     }
 
-
     [HttpPost]
-    [Authorize(Roles = "Admin,Wynajmujący")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RemoveTenant(int id)
+    public async Task<IActionResult> RemoveTenant(int propertyId)
     {
         var property = await _context.Property
-            .Include(p => p.ServiceRequests)
-            .FirstOrDefaultAsync(p => p.Id == id);
+            .Include(p => p.RentalAgreement)
+            .ThenInclude(ra => ra.Tenant)
+            .FirstOrDefaultAsync(p => p.Id == propertyId);
 
-        if (property == null || property.IsAvailable) return NotFound();
-
-        // Znajdź umowę najmu i usuń
-        var rentalAgreement = await _context.RentalAgreement
-            .FirstOrDefaultAsync(ra => ra.PropertyId == id);
-        if (rentalAgreement != null)
+        if (property == null || property.RentalAgreement == null)
         {
-            _context.RentalAgreement.Remove(rentalAgreement);
+            return NotFound("Nie znaleziono lokalu lub brak przypisanego najemcy.");
         }
 
-        // Usuń zgłoszenia serwisowe
-        _context.MaintenanceRequest.RemoveRange(property.ServiceRequests);
-
-        // Oznacz lokal jako dostępny
+        // Usuń najemcę i zwolnij lokal
+        _context.RentalAgreement.Remove(property.RentalAgreement);
         property.IsAvailable = true;
-        property.UserId = null;
 
         await _context.SaveChangesAsync();
-        return RedirectToAction("Edit", new { id = property.Id });
+
+        return RedirectToAction(nameof(Edit), new { id = propertyId });
     }
 
 }

@@ -15,4 +15,16 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<APT_Market.Models.RentalAgreement> RentalAgreement { get; set; } = default!;
     public DbSet<APT_Market.Models.MaintenanceRequest> MaintenanceRequest { get; set; } = default!;
     public DbSet<APT_Market.Models.UsersViewModel> UsersViewModel { get; set; } = default!;
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // Relacja Payment -> Property
+        modelBuilder.Entity<Payment>()
+            .HasOne(p => p.Property)
+            .WithMany(pr => pr.Payments)
+            .HasForeignKey(p => p.PropertyId)
+            .OnDelete(DeleteBehavior.Restrict); // Bez kaskadowego usuwania
+    }
 }
+

@@ -56,10 +56,11 @@ public class RentalAgreementController : Controller
         {
             tenant = new Tenant
             {
+                Id = Guid.NewGuid().ToString(), // Ręczne generowanie klucza
                 UserId = userId,
                 FullName = User.Identity.Name ?? "Nieznany użytkownik",
                 Email = (await _userManager.GetUserAsync(User))?.Email,
-                PhoneNumber = "" // Dodaj logikę do wypełnienia numeru
+                PhoneNumber = "" // Możesz wypełnić to numerem telefonu użytkownika
             };
 
             _context.Tenant.Add(tenant);
@@ -76,12 +77,14 @@ public class RentalAgreementController : Controller
             MonthlyRent = property.RentPrice
         };
 
-        property.IsAvailable = false; // Ustaw lokal jako zajęty
+        property.IsAvailable = false; // Lokal jest zajęty
         _context.RentalAgreement.Add(newRentalAgreement);
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("MyListings", "Property");
+        return RedirectToAction("Index", "Tenant");
     }
+
+
 
 
 
