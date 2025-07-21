@@ -25,7 +25,7 @@ public class RentalAgreement : IValidatableObject
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (StartDate > EndDate)
+        if (EndDate.HasValue && StartDate > EndDate.Value)
         {
             yield return new ValidationResult(
                 "Data musi zostać poprawnie wprowadzona (zakończenie najmu nie może być przed jego rozpoczęciem)",
