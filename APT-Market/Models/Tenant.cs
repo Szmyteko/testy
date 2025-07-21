@@ -14,7 +14,7 @@ public class Tenant
     [RegularExpression(@"^\+?[0-9]{9,11}$", ErrorMessage = "Nieprawidłowy numer telefonu.")]
     public string PhoneNumber { get; set; }
     [Required(ErrorMessage = "Adres email jest wymagany.")]
-    [RegularExpression(@"^[^@\s]+@[^@\s].[^@\s]+$", ErrorMessage = "Nieprawidłowy format adresu email.")]
+    [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Nieprawidłowy format adresu email.")]
     public string Email { get; set; }
     public ICollection<RentalAgreement> RentalAgreements { get; set; } = new List<RentalAgreement>();
     public ICollection<Payment> Payments { get; set; } = new List<Payment>();
