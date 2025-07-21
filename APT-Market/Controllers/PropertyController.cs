@@ -235,4 +235,30 @@ public class PropertyController : Controller
         return RedirectToAction(nameof(Edit), new { id = propertyId });
     }
 
+    [HttpGet]
+    [Authorize(Roles = "Admin,Wynajmujący")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var property = await _context.Property.FirstOrDefaultAsync(p => p.Id == id);
+        if (property == null)
+        {
+            return NotFound();
+        }
+        return View(property);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin,Wynajmujący")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var property = await _context.Property.FirstOrDefaultAsync(p => p.Id == id);
+        if (property == null)
+        {
+            return NotFound();
+        }
+        _context.Property.Remove(property);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(MyListings));
+    }
 }

@@ -1,8 +1,29 @@
 @model APT_Market.Models.Property
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Usuń lokal";
     Layout = "_Layout";
 }
 
-<h2>title</h2>
+<h2>Potwierdzenie usunięcia</h2>
+<p>Czy na pewno chcesz usunąć ten lokal?</p>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Adres</dt>
+        <dd class="col-sm-10">@Model.Address</dd>
+        <dt class="col-sm-2">Cena najmu</dt>
+        <dd class="col-sm-10">@Model.RentPrice zł</dd>
+        <dt class="col-sm-2">Metraż</dt>
+        <dd class="col-sm-10">@Model.Size m²</dd>
+        <dt class="col-sm-2">Opis</dt>
+        <dd class="col-sm-10">@Model.Description</dd>
+    </dl>
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Usuń</button>
+    <a asp-action="MyListings" class="btn btn-secondary">Anuluj</a>
+</form>
